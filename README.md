@@ -8,6 +8,8 @@ Information
 This is a work in progress, and will be updated iteratively as new features are finished.
 Documentation will be added as necessary.
 
+Contributions in the form of Issues, Pull Requests, and other appropriate methods is encouraged!
+
 Key Features
 ------------
 - Provides an easy-to-use Python wrapper for the [Open Notify ISS APIs](http://open-notify.org/)
