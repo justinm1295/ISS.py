@@ -16,11 +16,12 @@ Documentation
 -------------
 - Client
 
-    .code-block:: get_location()
-    - Returns JSON object containing the current position of the ISS.
+.. code:: py
+    get_location()
+    # Returns JSON object containing the current position of the ISS.
 
-    .code-block:: get_pass_times(lat=1, lon=1, alt=1, num=1)
-    - Returns JSON object containing the next *num* passes for the specified *lat*, *lon*, and *alt*.
+    get_pass_times(lat=1, lon=1, alt=1, num=1)
+    # Returns JSON object containing the next *num* passes for the specified *lat*, *lon*, and *alt*.
 
-    .code-block:: get_astronauts()
-    - Returns JSON object containing the astronauts currently in orbit.
+    get_astronauts()
+    # Returns JSON object containing the astronauts currently in orbit.
