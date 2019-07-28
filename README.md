@@ -8,7 +8,7 @@ Information
 This is a work in progress, and will be updated iteratively as new features are finished.
 Documentation will be added as necessary.
 
-*Contributions in the form of Issues, Pull Requests, and other appropriate methods is encouraged!*
+*Contributions in the form of Issues, Pull Requests, and other appropriate methods are encouraged!*
 
 Key Features
 ------------
