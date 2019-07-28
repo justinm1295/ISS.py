@@ -1,3 +1,7 @@
+class LocationFailureException(Exception):
+    pass
+
+
 class BadLatitudeException(Exception):
     pass
 
@@ -11,4 +15,8 @@ class BadAltitudeException(Exception):
 
 
 class BadNumberException(Exception):
+    pass
+
+
+class AstronautFailureException(Exception):
     pass

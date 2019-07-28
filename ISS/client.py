@@ -1,5 +1,5 @@
+from ISS.exceptions import *
 import requests
-from ISS.exceptions import BadLatitudeException, BadLongitudeException, BadAltitudeException, BadNumberException
 from datetime import datetime
 
 
@@ -8,43 +8,40 @@ class Client:
         self.base_url = 'http://api.open-notify.org/'
 
     def get_location(self):
-        return requests.get('{}iss-now.json'.format(self.base_url))
+        response = requests.get(f'{self.base_url}iss-now.json')
+        if response.status_code is not 200:
+            raise LocationFailureException('Unable to get current location.')
+        return response.json()['iss_position']
 
-    def get_pass_times(self, lat=1, lon=1, alt=1, num=1):
-        response = requests.get('{}iss-pass.json?lat={}&lon={}&alt={}&n={}'.format(self.base_url, lat, lon, alt, num))
-        if response.status_code == 400:
+    def get_pass_times(self, lat=1.0, lon=1.0, alt=1.0, num=1):
+        response = requests.get(f'{self.base_url}iss-pass.json?lat={lat}&lon={lon}&alt={alt}&n={num}')
+        if response.status_code is not 200:
             if 'Latitude' in response.json()['reason']:
-                raise BadLatitudeException('Latitude value must be between -90.0 and 90.0 degrees (cannot be 0).')
+                raise BadLatitudeException(f'Latitude value must be between -90.0 and 90.0 degrees (cannot be 0). Entered: {lat}')
             elif 'Longitue' in response.json()['reason']:
-                raise BadLongitudeException('Longitude value must be between -180.0 and 180.0 degrees (cannot be 0).')
+                raise BadLongitudeException(f'Longitude value must be between -180.0 and 180.0 degrees (cannot be 0). Entered: {lon}')
             elif 'Altitude' in response.json()['reason']:
-                raise BadAltitudeException("Altitude must be between 1 and 10,000")
+                raise BadAltitudeException(f"Altitude must be between 1 and 10,000. Entered: {alt}")
             elif 'Number' in response.json()['reason']:
-                raise BadNumberException("Number must be between 1 and 100")
-        return response
+                raise BadNumberException(f"Number must be between 1 and 100. Entered: {num}")
+        return response.json()['response']
 
     def get_astronauts(self):
-        return requests.get('{}astros.json'.format(self.base_url))
+        response = requests.get(f'{self.base_url}astros.json')
+        if response.status_code is not 200:
+            raise AstronautFailureException('Unable to get current astronauts.')
+        return response.json()['people']
 
-    def get_next_pass_date(self, lat=1, lon=1, alt=1):
-        response = self.get_pass_times(lat, lon, alt, 1)
-        if len(response.json()['response']) == 0:
+    def get_date_of_next_pass(self, lat=1.0, lon=1.0, alt=1.0):
+        dates = self.get_pass_times(lat, lon, alt, 1)
+        if len(dates) == 0:
             return 'No passes found.'
         else:
-            return datetime.utcfromtimestamp(response.json()['response'][0]['risetime'])
+            return datetime.utcfromtimestamp(dates[0]['risetime'])
 
-    def get_number_of_astronauts(self):
-        return self.get_astronauts().json()['number']
+def main():
+    client = Client()
+    print(client.get_date_of_next_pass(10.0, 20, 5,))
 
-    def get_list_of_astronaut_names(self):
-        return [person['name'] for person in self.get_astronauts().json()['people']]
-
-    def get_next_pass_duration_in_seconds(self, lat=1, lon=1, alt=1):
-        response = self.get_pass_times(lat, lon, alt, 1)
-        if len(response.json()['response']) == 0:
-            return 'No passes found.'
-        else:
-            return response.json()['response'][0]['duration']
-
-    def get_set_of_occupied_spacecraft(self):
-        return set([person['craft'] for person in self.get_astronauts().json()['people']])
+if __name__ == "__main__":
+    main()

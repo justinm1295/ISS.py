@@ -18,29 +18,43 @@ Documentation
 
 ```python 
 get_location()
-# Returns JSON object containing the current position of the ISS.
+# Returns dict containing the current latitude and longitude of the ISS.
+# If unable to retrieve the location for any reason, returns a LocationFailureException
 
 get_pass_times(lat=1, lon=1, alt=1, num=1)
-# Returns JSON object containing the next *num* passes for the specified lat, lon, and alt.
+# Returns a list of dicts containing the next num passes for the specified lat, lon, and alt.
 # If lat, lon, alt, or num are invalid, returns a Bad<Latitude, Longitude, Altitude, Number>Exception.
 
 get_astronauts()
-# Returns JSON object containing the astronauts currently in orbit.
+# Returns a list of dicts containing the astronauts currently in orbit.
+# If unable to retrieve the astronauts for any reason, returns a AstronautFailureException
 
-get_next_pass_date(lat=1, lon=1, alt=1)
-# Returns datetime object of the next pass for the specified lat, lon, and alt, OR 'No passes found.'
-# If lat, lon, or alt are invalid, returns a Bad<Latitude, Longitude, Altitude, Number>Exception.
+get_date_of_next_pass(lat=1, lon=1, alt=1)
+# Returns the UTC datetime of the next pass for the specified lat, lon, and alt OR 'No passes found."
+# If lat, lon, or alt are invalid, returns a Bad<Latitude, Longitude, Altitude>Exception
+```
 
-get_next_pass_duration_in_seconds(lat=1, lon=1, alt=1)
-# Returns the duration (seconds) of the next pass for the specified lat, lon, and alt, OR 'No passes found.'
-# If lat, lon, or alt are invalid, returns a Bad<Latitude, Longitude, Altitude, Number>Exception.
+### Examples
 
-get_number_of_astronauts()
-# Returns the number of astronauts currently in orbit.
+```python
+from ISS import Client
 
-get_list_of_astronaut_names()
-# Returns a list containing the names of the astronauts currently in orbit.
 
-get_set_of_occupied_spacecraft()
-# Returns a set with the names of the spacecraft currently occupied.
+client = Client()
+
+# Get the current location of the ISS.
+client.get_location()
+# {'longitude': '-63.5005', 'latitude': '16.5390'}
+
+# Find the number of astronauts in space.
+print(len(client.get_astronauts()))
+# 6
+
+# Get the names of the astronauts in space.
+print([person['name'] for person in client.get_astronauts()])
+# ['Alexey Ovchinin', 'Nick Hague', 'Christina Koch', 'Alexander Skvortsov', 'Luca Parmitano', 'Andrew Morgan']
+
+# Get date of next pass.
+print(client.get_date_of_next_pass(10.0, 20, 5))
+# 2019-07-28 22:39:25
 ```
