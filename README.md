@@ -43,7 +43,7 @@ from ISS import Client
 client = Client()
 
 # Get the current location of the ISS.
-client.get_location()
+print(client.get_location())
 # {'longitude': '-63.5005', 'latitude': '16.5390'}
 
 # Find the number of astronauts in space.
