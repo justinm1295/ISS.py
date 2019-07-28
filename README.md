@@ -29,9 +29,11 @@ get_astronauts()
 
 get_next_pass_date(lat=1, lon=1, alt=1)
 # Returns datetime object of the next pass for the specified lat, lon, and alt, OR 'No passes found.'
+# If lat, lon, or alt are invalid, returns a Bad<Latitude, Longitude, Altitude, Number>Exception.
 
 get_next_pass_duration_in_seconds(lat=1, lon=1, alt=1)
 # Returns the duration (seconds) of the next pass for the specified lat, lon, and alt, OR 'No passes found.'
+# If lat, lon, or alt are invalid, returns a Bad<Latitude, Longitude, Altitude, Number>Exception.
 
 get_number_of_astronauts()
 # Returns the number of astronauts currently in orbit.
