@@ -18,5 +18,9 @@ class BadNumberException(Exception):
     pass
 
 
+class GetPassesException(Exception):
+    pass
+
+
 class AstronautFailureException(Exception):
     pass

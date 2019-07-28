@@ -24,6 +24,8 @@ class Client:
                 raise BadAltitudeException(f"Altitude must be between 1 and 10,000. Entered: {alt}")
             elif 'Number' in response.json()['reason']:
                 raise BadNumberException(f"Number must be between 1 and 100. Entered: {num}")
+            else:
+                raise GetPassesException('Unable to get passes.')
         return response.json()['response']
 
     def get_astronauts(self):
@@ -38,10 +40,3 @@ class Client:
             return 'No passes found.'
         else:
             return datetime.utcfromtimestamp(dates[0]['risetime'])
-
-def main():
-    client = Client()
-    print(client.get_date_of_next_pass(10.0, 20, 5,))
-
-if __name__ == "__main__":
-    main()
