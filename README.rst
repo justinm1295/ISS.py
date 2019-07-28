@@ -4,6 +4,7 @@ ISS.py
 Information
 -----------
 This is a work in progress, and will be updated iteratively as new features are finished.
+Documentation will be added as necessary.
 
 Key Features
 ------------
