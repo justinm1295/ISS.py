@@ -1,3 +1,5 @@
+[![Build status](https://travis-ci.org/justinm1295/ISS.py.svg?master)](https://travis-ci.org/justinm1295)
+
 ISS.py
 ======
 
