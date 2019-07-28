@@ -11,12 +11,11 @@ class Client:
         return requests.get('{}iss-now.json'.format(self.base_url))
 
     def get_pass_times(self, lat=1, lon=1, alt=1, num=1):
-        print('test2')
         response = requests.get('{}iss-pass.json?lat={}&lon={}&alt={}&n={}'.format(self.base_url, lat, lon, alt, num))
         if response.status_code == 400:
             if 'Latitude' in response.json()['reason']:
                 raise BadLatitudeException('Latitude value must be between -90.0 and 90.0 degrees (cannot be 0).')
-            elif 'Longitude' in response.json()['reason']:
+            elif 'Longitue' in response.json()['reason']:
                 raise BadLongitudeException('Longitude value must be between -180.0 and 180.0 degrees (cannot be 0).')
             elif 'Altitude' in response.json()['reason']:
                 raise BadAltitudeException("Altitude must be between 1 and 10,000")
@@ -32,13 +31,20 @@ class Client:
         if len(response.json()['response']) == 0:
             return 'No passes found.'
         else:
-            return datetime.utcfromtimestamp(response.json()['response'][0]['risetime']).strftime('%B %d, %Y at %I:%M:%S %p UTC')
+            return datetime.utcfromtimestamp(response.json()['response'][0]['risetime'])
 
+    def get_number_of_astronauts(self):
+        return self.get_astronauts().json()['number']
 
-def main():
-    client = Client()
-    client.get_next_pass_date()
+    def get_list_of_astronaut_names(self):
+        return [person['name'] for person in self.get_astronauts().json()['people']]
 
+    def get_next_pass_duration_in_seconds(self, lat=1, lon=1, alt=1):
+        response = self.get_pass_times(lat, lon, alt, 1)
+        if len(response.json()['response']) == 0:
+            return 'No passes found.'
+        else:
+            return response.json()['response'][0]['duration']
 
-if __name__ == "__main__":
-    main()
+    def get_set_of_occupied_spacecraft(self):
+        return set([person['craft'] for person in self.get_astronauts().json()['people']])
